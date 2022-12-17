@@ -21,4 +21,27 @@ class AgoraRtcRawdata {
   static Future<void> unregisterVideoFrameObserver() {
     return _channel.invokeMethod('unregisterVideoFrameObserver');
   }
+
+  static Future<void> setBeautyEffect({BeautyEffect? type, double value = 1}) {
+    return _channel.invokeMethod(
+      'setBeautyEffect',
+      {
+        "beauty_type": type?.value,
+        "value": value,
+      },
+    );
+  }
+}
+
+enum BeautyEffect {
+  BigEye(1),
+  Lighten(2),
+  Rosy(3),
+  Scrub(4),
+  Soften(5),
+  VFace(6);
+
+  const BeautyEffect(this.value);
+
+  final int value;
 }

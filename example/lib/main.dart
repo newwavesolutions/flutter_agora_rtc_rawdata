@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:agora_rtc_engine/rtc_remote_view.dart' as RtcRemoteView;
 import 'package:agora_rtc_rawdata/agora_rtc_rawdata.dart';
 import 'package:agora_rtc_rawdata_example/config/agora.config.dart' as config;
+import 'package:agora_rtc_rawdata_example/widgets/beauty_effect_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,8 @@ class _MyAppState extends State<MyApp> {
     await engine.destroy();
   }
 
+  bool _isBeautyEffect = true;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -85,27 +88,38 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Stack(
+        body: Column(
           children: [
-            if (startPreview) RtcLocalView.SurfaceView(),
-            Align(
-              alignment: Alignment.topLeft,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.of(remoteUid.map(
-                    (e) => Container(
-                      width: 120,
-                      height: 120,
-                      child: RtcRemoteView.SurfaceView(
-                        uid: e,
-                        channelId: config.channelId,
+            BeautyEffectWidget(
+              onBeautyEffectChanged: (value) {
+                AgoraRtcRawdata.setBeautyEffect(type: value, value: 1);
+              },
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  if (startPreview) RtcLocalView.SurfaceView(),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.of(remoteUid.map(
+                          (e) => Container(
+                            width: 120,
+                            height: 120,
+                            child: RtcRemoteView.SurfaceView(
+                              uid: e,
+                              channelId: config.channelId,
+                            ),
+                          ),
+                        )),
                       ),
                     ),
-                  )),
-                ),
+                  )
+                ],
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import android.util.Log
 import java.util.*
 
 /** AgoraRtcRawdataPlugin */
@@ -86,6 +87,9 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
           videoObserver = null
         }
         result.success(null)
+      }
+      "setBeautyEffect" -> {
+        Log.d("setBeautyEffect", call.arguments.toString())
       }
       else -> result.notImplemented()
     }
