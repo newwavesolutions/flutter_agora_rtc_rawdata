@@ -118,19 +118,19 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
               Imgproc.cvtColor(originMat, newMat, Imgproc.COLOR_RGB2GRAY);
 
               newBitmap = Bitmap.createBitmap(originMat.cols(), originMat.rows(), Bitmap.Config.ARGB_8888)
-              Utils.matToBitmap(originMat, newBitmap!!)
+              Utils.matToBitmap(newMat, newBitmap!!)
 
               //Step 3: Convert Bitmap to i420 buffer
               newI420 = YUVUtils.bitmapToI420(newBitmap!!)
               var yBuffer = ByteArray(newI420!!.bufferY.capacity())
               var uBuffer = ByteArray(newI420!!.bufferU.capacity())
               var vBuffer = ByteArray(newI420!!.bufferV.capacity())
-//              for (i in yBuffer.indices) {
-//                videoFrame.getyBuffer()[i] = yBuffer[i]
-//              }
-//              for (i in uBuffer.indices) {
-//                videoFrame.getuBuffer()[i] = uBuffer[i]
-//              }
+              for (i in yBuffer.indices) {
+                videoFrame.getyBuffer()[i] = yBuffer[i]
+              }
+              for (i in uBuffer.indices) {
+                videoFrame.getuBuffer()[i] = uBuffer[i]
+              }
               for (i in vBuffer.indices) {
                 videoFrame.getvBuffer()[i] = vBuffer[i]
               }
