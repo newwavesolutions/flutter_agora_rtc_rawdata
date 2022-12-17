@@ -43,7 +43,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 
   var originBitmap: Bitmap? = null
   var originI420: I420Buffer? = null
-  var newI420: I420Buffer? = null
+  var newI420: ByteArray? = null
   var newBitmap: Bitmap? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -121,18 +121,18 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
               Utils.matToBitmap(newMat, newBitmap!!)
 
               //Step 3: Convert Bitmap to i420 buffer
-              newI420 = YUVUtils.bitmapToI420(newBitmap!!)
-              var yBuffer = ByteArray(newI420!!.bufferY.capacity())
-              var uBuffer = ByteArray(newI420!!.bufferU.capacity())
-              var vBuffer = ByteArray(newI420!!.bufferV.capacity())
-              for (i in yBuffer.indices) {
-                videoFrame.getyBuffer()[i] = yBuffer[i]
+              newI420 = YUVUtils.bitmapToI420(originMat.cols(), originMat.rows(), newBitmap!!)
+//              var yBuffer = ByteArray(newI420!!.bufferY.capacity())
+//              var uBuffer = ByteArray(newI420!!.bufferU.capacity())
+//              var vBuffer = ByteArray(newI420!!.bufferV.capacity())
+              for (i in videoFrame.getyBuffer().indices) {
+                videoFrame.getyBuffer()[i] = newI420!![i]
               }
-              for (i in uBuffer.indices) {
-                videoFrame.getuBuffer()[i] = uBuffer[i]
+              for (i in videoFrame.getuBuffer().indices) {
+                videoFrame.getuBuffer()[i] = newI420!![videoFrame.getyBuffer().size + i]
               }
-              for (i in vBuffer.indices) {
-                videoFrame.getvBuffer()[i] = vBuffer[i]
+              for (i in videoFrame.getvBuffer().indices) {
+                videoFrame.getvBuffer()[i] = newI420!![videoFrame.getyBuffer().size + videoFrame.getuBuffer().size + i]
               }
               return true
             }
