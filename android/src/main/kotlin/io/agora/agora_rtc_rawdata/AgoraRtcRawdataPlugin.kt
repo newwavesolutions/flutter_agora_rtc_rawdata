@@ -23,6 +23,7 @@ import java.nio.ByteBuffer
 import it.thoson.flutter_agora_demo.YUVUtils
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.InstallCallbackInterface
+import org.opencv.imgproc.Imgproc
 
 /** AgoraRtcRawdataPlugin */
 class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
@@ -46,7 +47,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "agora_rtc_rawdata")
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
-    OpenCVLoader.initDebug()
+//    OpenCVLoader.initDebug()
     mWrapper = EffectWrapper(context)
     initView()
   }
@@ -59,7 +60,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 //                wrapper.Sticker(wrapper.mWrapper, EffectWrapper.StickerEffect.Angel.value)
 //                wrapper.Quality(wrapper.mWrapper, 10)
 //                wrapper.Beauty(wrapper.mWrapper, EffectWrapper.BeautyEffect.BigEye.value)
-//        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
+        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
         mWrapper!!.SetBeauty(mWrapper!!.mWrapper, EffectWrapper.BeautyEffect.BigEye.value, 100)
         mWrapper!!.Sticker(mWrapper!!.mWrapper, EffectWrapper.StickerEffect.Cat.value)
         mWrapper!!.beautiful = false
@@ -167,8 +168,10 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
               //Step 2: Process data
               val originMat = Mat()
               Utils.bitmapToMat(originBitmap, originMat)
-              mWrapper?.Apply(mWrapper!!.mWrapper, originMat.nativeObjAddr)
-              Utils.matToBitmap(originMat, originBitmap)
+              val matRGB = Mat()
+              Imgproc.cvtColor(originMat, matRGB, Imgproc.COLOR_BGRA2BGR)
+              mWrapper?.Apply(mWrapper!!.mWrapper, matRGB.nativeObjAddr)
+              Utils.matToBitmap(matRGB, originBitmap)
 
               val revertMatrix = Matrix()
               revertMatrix.setRotate(-270f)
