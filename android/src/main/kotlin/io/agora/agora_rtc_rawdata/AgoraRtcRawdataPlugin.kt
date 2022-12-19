@@ -67,11 +67,11 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     } else {
       Log.d("SonLT2", "init success")
     }
-    mWrapper?.SetBeauty(
-      mWrapper!!.mWrapper,
-      2,
-      1
-    )
+//    mWrapper?.SetBeauty(
+//      mWrapper!!.mWrapper,
+//      2,
+//      1
+//    )
     if(mWrapper == null) {
       Log.d("SonLT", "init fail")
     } else {
@@ -110,15 +110,15 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
         super.onPackageInstall(operation, callback)
       }
     })
-    mWrapper?.Filter(
-      mWrapper!!.mWrapper,
-      EffectWrapper.FilterEffect.Cool.value
-    )
-
-    mWrapper?.Filter(
-      mWrapper!!.mWrapper,
-      EffectWrapper.FilterEffect.Cool.value
-    )
+//    mWrapper?.Filter(
+//      mWrapper!!.mWrapper,
+//      EffectWrapper.FilterEffect.Cool.value
+//    )
+//
+//    mWrapper?.Filter(
+//      mWrapper!!.mWrapper,
+//      EffectWrapper.FilterEffect.Cool.value
+//    )
     mWrapper?.startProcessing()
   }
 
