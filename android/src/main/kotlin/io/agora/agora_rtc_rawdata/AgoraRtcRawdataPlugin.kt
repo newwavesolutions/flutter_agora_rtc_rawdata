@@ -24,6 +24,8 @@ import vn.nws.liveeffects.EffectWrapper
 import java.nio.ByteBuffer
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import it.thoson.flutter_agora_demo.YUVUtils
+import org.opencv.android.BaseLoaderCallback
+import org.opencv.android.InstallCallbackInterface
 
 /** AgoraRtcRawdataPlugin */
 class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
@@ -53,12 +55,71 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
     OpenCVLoader.initDebug()
+    if(mWrapper == null) {
+      Log.d("SonLT1", "init fail")
+    } else {
+      Log.d("SonLT1", "init success")
+    }
     mWrapper = EffectWrapper(context)
+    initView()
+    if(mWrapper == null) {
+      Log.d("SonLT2", "init fail")
+    } else {
+      Log.d("SonLT2", "init success")
+    }
     mWrapper?.SetBeauty(
       mWrapper!!.mWrapper,
       2,
       1
     )
+    if(mWrapper == null) {
+      Log.d("SonLT", "init fail")
+    } else {
+      Log.d("SonLT", "init success")
+    }
+  }
+
+  private fun initView() {
+    mWrapper?.InitWrapper(object : BaseLoaderCallback(context) {
+      override fun onManagerConnected(status: Int) {
+        // Todo: change effect here
+//                wrapper.startProcessing()
+//                wrapper.Sticker(wrapper.mWrapper, EffectWrapper.StickerEffect.Angel.value)
+//                wrapper.Quality(wrapper.mWrapper, 10)
+//                wrapper.Beauty(wrapper.mWrapper, EffectWrapper.BeautyEffect.BigEye.value)
+        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
+        mWrapper!!.SetBeauty(mWrapper!!.mWrapper, EffectWrapper.BeautyEffect.BigEye.value, 100)
+        mWrapper!!.Sticker(mWrapper!!.mWrapper, EffectWrapper.StickerEffect.Cat.value)
+        mWrapper!!.beautiful = false
+//                Handler().postDelayed({
+//                    if (sGoCoderSDK != null) {
+//                        // Create a broadcaster instance
+//                        mWZBroadcast = WOWZBroadcast()
+//                        mWZBroadcast?.setLogLevel(WOWZLog.LOG_LEVEL_DEBUG)
+//
+//                        configWowzBroadcast()
+//                        val configError = startBroadcast()
+//                        if (configError != null) {
+//                            Toast.makeText(context, "Start LiveStream Fail", Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                }, 5000)
+      }
+
+      override fun onPackageInstall(operation: Int, callback: InstallCallbackInterface?) {
+        super.onPackageInstall(operation, callback)
+      }
+    })
+    mWrapper?.Filter(
+      mWrapper!!.mWrapper,
+      EffectWrapper.FilterEffect.Cool.value
+    )
+
+    mWrapper?.Filter(
+      mWrapper!!.mWrapper,
+      EffectWrapper.FilterEffect.Cool.value
+    )
+    mWrapper?.startProcessing()
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
