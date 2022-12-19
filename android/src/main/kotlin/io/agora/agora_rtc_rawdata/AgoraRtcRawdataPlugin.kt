@@ -15,15 +15,11 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.util.Log
-import java.util.*
-import io.github.crow_misia.libyuv.I420Buffer
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.Mat
-import org.opencv.imgproc.Imgproc
 import vn.nws.liveeffects.EffectWrapper
 import java.nio.ByteBuffer
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import it.thoson.flutter_agora_demo.YUVUtils
 import org.opencv.android.BaseLoaderCallback
 import org.opencv.android.InstallCallbackInterface
@@ -42,13 +38,8 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
   private lateinit var context: Context
   private lateinit var activity: Activity
 
-  private var beautyEffectIndex: Int = 1
-
   var originBitmap: Bitmap? = null
-  var originI420: I420Buffer? = null
   var newI420: ByteArray? = null
-  var newBitmap: Bitmap? = null
-
   var mWrapper: EffectWrapper? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -56,28 +47,8 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
     OpenCVLoader.initDebug()
-    if (mWrapper == null) {
-      Log.d("SonLT1", "init fail")
-    } else {
-      Log.d("SonLT1", "init success")
-    }
     mWrapper = EffectWrapper(context)
     initView()
-    if (mWrapper == null) {
-      Log.d("SonLT2", "init fail")
-    } else {
-      Log.d("SonLT2", "init success")
-    }
-//    mWrapper?.SetBeauty(
-//      mWrapper!!.mWrapper,
-//      2,
-//      1
-//    )
-    if (mWrapper == null) {
-      Log.d("SonLT", "init fail")
-    } else {
-      Log.d("SonLT", "init success")
-    }
   }
 
   private fun initView() {
@@ -181,33 +152,38 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
               )
 
               // Oriented image
-              val matrix = Matrix()
-              matrix.setRotate(270f)
-              // 围绕原地进行旋转
-              // 围绕原地进行旋转
-              originBitmap = Bitmap.createBitmap(originBitmap!!, 0, 0, videoFrame.width, videoFrame.height, matrix, false)
+              val rotateMatrix = Matrix()
+              rotateMatrix.setRotate(270f)
+              originBitmap = Bitmap.createBitmap(
+                originBitmap!!,
+                0,
+                0,
+                videoFrame.width,
+                videoFrame.height,
+                rotateMatrix,
+                false
+              )
 
               //Step 2: Process data
               val originMat = Mat()
-//              val newMat = Mat()
               Utils.bitmapToMat(originBitmap, originMat)
-
-//              Imgproc.cvtColor(originMat, newMat, Imgproc.COLOR_RGB2GRAY);
               mWrapper?.Apply(mWrapper!!.mWrapper, originMat.nativeObjAddr)
+              Utils.matToBitmap(originMat, originBitmap)
 
-              newBitmap =
-                Bitmap.createBitmap(originMat.cols(), originMat.rows(), Bitmap.Config.ARGB_8888)
-              Utils.matToBitmap(originMat, newBitmap!!)
-
-
-              val matrix2 = Matrix()
-              matrix2.setRotate(-270f)
-              // 围绕原地进行旋转
-              // 围绕原地进行旋转
-              newBitmap = Bitmap.createBitmap(newBitmap!!, 0, 0, videoFrame.height, videoFrame.width, matrix2, false)
+              val revertMatrix = Matrix()
+              revertMatrix.setRotate(-270f)
+              originBitmap = Bitmap.createBitmap(
+                originBitmap!!,
+                0,
+                0,
+                videoFrame.height,
+                videoFrame.width,
+                revertMatrix,
+                false
+              )
 
               //Step 3: Convert Bitmap to i420 buffer
-              newI420 = YUVUtils.bitmapToI420(videoFrame.width, videoFrame.height, newBitmap!!)
+              newI420 = YUVUtils.bitmapToI420(videoFrame.width, videoFrame.height, originBitmap!!)
 //              var yBuffer = ByteArray(newI420!!.bufferY.capacity())
 //              var uBuffer = ByteArray(newI420!!.bufferU.capacity())
 //              var vBuffer = ByteArray(newI420!!.bufferV.capacity())
@@ -226,9 +202,9 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 
             override fun onRenderVideoFrame(uid: Int, videoFrame: VideoFrame): Boolean {
               // unsigned char value 255
-              Arrays.fill(videoFrame.getuBuffer(), -1)
-              Arrays.fill(videoFrame.getvBuffer(), -1)
-              return true
+//              Arrays.fill(videoFrame.getuBuffer(), -1)
+//              Arrays.fill(videoFrame.getvBuffer(), -1)
+              return false
             }
           }
         }
