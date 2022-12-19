@@ -3,6 +3,7 @@ package io.agora.agora_rtc_rawdata
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import androidx.annotation.NonNull
 import io.agora.rtc.rawdata.base.AudioFrame
 import io.agora.rtc.rawdata.base.IAudioFrameObserver
@@ -55,14 +56,14 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
     OpenCVLoader.initDebug()
-    if(mWrapper == null) {
+    if (mWrapper == null) {
       Log.d("SonLT1", "init fail")
     } else {
       Log.d("SonLT1", "init success")
     }
     mWrapper = EffectWrapper(context)
     initView()
-    if(mWrapper == null) {
+    if (mWrapper == null) {
       Log.d("SonLT2", "init fail")
     } else {
       Log.d("SonLT2", "init success")
@@ -72,7 +73,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 //      2,
 //      1
 //    )
-    if(mWrapper == null) {
+    if (mWrapper == null) {
       Log.d("SonLT", "init fail")
     } else {
       Log.d("SonLT", "init success")
@@ -87,7 +88,7 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 //                wrapper.Sticker(wrapper.mWrapper, EffectWrapper.StickerEffect.Angel.value)
 //                wrapper.Quality(wrapper.mWrapper, 10)
 //                wrapper.Beauty(wrapper.mWrapper, EffectWrapper.BeautyEffect.BigEye.value)
-        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
+//        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
         mWrapper!!.SetBeauty(mWrapper!!.mWrapper, EffectWrapper.BeautyEffect.BigEye.value, 100)
         mWrapper!!.Sticker(mWrapper!!.mWrapper, EffectWrapper.StickerEffect.Cat.value)
         mWrapper!!.beautiful = false
@@ -179,6 +180,13 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                 videoFrame.height
               )
 
+              // Oriented image
+              val matrix = Matrix()
+              matrix.setRotate(270f)
+              // 围绕原地进行旋转
+              // 围绕原地进行旋转
+              originBitmap = Bitmap.createBitmap(originBitmap!!, 0, 0, videoFrame.width, videoFrame.height, matrix, false)
+
               //Step 2: Process data
               val originMat = Mat()
 //              val newMat = Mat()
@@ -191,8 +199,15 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                 Bitmap.createBitmap(originMat.cols(), originMat.rows(), Bitmap.Config.ARGB_8888)
               Utils.matToBitmap(originMat, newBitmap!!)
 
+
+              val matrix2 = Matrix()
+              matrix2.setRotate(-270f)
+              // 围绕原地进行旋转
+              // 围绕原地进行旋转
+              newBitmap = Bitmap.createBitmap(newBitmap!!, 0, 0, videoFrame.height, videoFrame.width, matrix2, false)
+
               //Step 3: Convert Bitmap to i420 buffer
-              newI420 = YUVUtils.bitmapToI420(originMat.cols(), originMat.rows(), newBitmap!!)
+              newI420 = YUVUtils.bitmapToI420(videoFrame.width, videoFrame.height, newBitmap!!)
 //              var yBuffer = ByteArray(newI420!!.bufferY.capacity())
 //              var uBuffer = ByteArray(newI420!!.bufferU.capacity())
 //              var vBuffer = ByteArray(newI420!!.bufferV.capacity())
