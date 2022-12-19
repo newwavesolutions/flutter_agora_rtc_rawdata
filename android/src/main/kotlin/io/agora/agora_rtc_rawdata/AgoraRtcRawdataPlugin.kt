@@ -55,44 +55,49 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
   private fun initView() {
     mWrapper?.InitWrapper(object : BaseLoaderCallback(context) {
       override fun onManagerConnected(status: Int) {
-        // Todo: change effect here
-//                wrapper.startProcessing()
-//                wrapper.Sticker(wrapper.mWrapper, EffectWrapper.StickerEffect.Angel.value)
-//                wrapper.Quality(wrapper.mWrapper, 10)
-//                wrapper.Beauty(wrapper.mWrapper, EffectWrapper.BeautyEffect.BigEye.value)
-        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
-        mWrapper!!.SetBeauty(mWrapper!!.mWrapper, EffectWrapper.BeautyEffect.BigEye.value, 100)
-        mWrapper!!.Sticker(mWrapper!!.mWrapper, EffectWrapper.StickerEffect.Cat.value)
-        mWrapper!!.beautiful = false
-//                Handler().postDelayed({
-//                    if (sGoCoderSDK != null) {
-//                        // Create a broadcaster instance
-//                        mWZBroadcast = WOWZBroadcast()
-//                        mWZBroadcast?.setLogLevel(WOWZLog.LOG_LEVEL_DEBUG)
-//
-//                        configWowzBroadcast()
-//                        val configError = startBroadcast()
-//                        if (configError != null) {
-//                            Toast.makeText(context, "Start LiveStream Fail", Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                }, 5000)
+//        mWrapper!!.Filter(mWrapper!!.mWrapper, EffectWrapper.FilterEffect.Cool.value)
+//        mWrapper!!.SetBeauty(mWrapper!!.mWrapper, EffectWrapper.BeautyEffect.BigEye.value, 100)
+//        mWrapper!!.Sticker(mWrapper!!.mWrapper, EffectWrapper.StickerEffect.Cat.value)
+//        mWrapper!!.beautiful = false
       }
 
       override fun onPackageInstall(operation: Int, callback: InstallCallbackInterface?) {
         super.onPackageInstall(operation, callback)
       }
     })
-//    mWrapper?.Filter(
-//      mWrapper!!.mWrapper,
-//      EffectWrapper.FilterEffect.Cool.value
-//    )
-//
-//    mWrapper?.Filter(
-//      mWrapper!!.mWrapper,
-//      EffectWrapper.FilterEffect.Cool.value
-//    )
     mWrapper?.startProcessing()
+  }
+
+  private fun removeBeauty(){
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.BigEye.value,
+    )
+
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.Lighten.value,
+    )
+
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.Rosy.value,
+    )
+
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.Scrub.value,
+    )
+
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.Soften.value,
+    )
+
+    mWrapper!!.RemoveBeauty(
+      mWrapper!!.mWrapper,
+      EffectWrapper.BeautyEffect.VFace.value,
+    )
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -222,11 +227,55 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
         result.success(null)
       }
       "setBeautyEffect" -> {
-        Log.d("setBeautyEffect", call.arguments.toString())
+        var baseValue: Double? = (call.arguments as Map<*, *>)["value"] as Double?
+        var value: Int? = baseValue?.toInt()
+        var type: Int? = (call.arguments as Map<*, *>)["beauty_type"] as Int?
+        Log.d("setBeautyEffect", "{beauty_type=$type, value=$value}")
+
+        if (value == null || type == null) {
+          return
+        }
+        removeBeauty()
+        when (type) {
+          1 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.BigEye.value,
+            value
+          )
+          2 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.Lighten.value,
+            value
+          )
+          3 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.Rosy.value,
+            value
+          )
+          4 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.Scrub.value,
+            value
+          )
+          5 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.Soften.value,
+            value
+          )
+          6 -> mWrapper!!.SetBeauty(
+            mWrapper!!.mWrapper,
+            EffectWrapper.BeautyEffect.VFace.value,
+            value
+          )
+        }
+
+        result.success("")
       }
       else -> result.notImplemented()
     }
   }
+
+
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
