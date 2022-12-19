@@ -38,9 +38,9 @@ class _MyAppState extends State<MyApp> {
   }
 
   _initEngine() async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      await [Permission.microphone, Permission.camera].request();
-    }
+    // if (defaultTargetPlatform == TargetPlatform.android) {
+    //   await [Permission.microphone, Permission.camera].request();
+    // }
 
     engine = await RtcEngine.create(config.appId);
     engine.setEventHandler(

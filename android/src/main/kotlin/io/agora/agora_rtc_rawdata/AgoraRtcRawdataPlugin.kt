@@ -20,7 +20,7 @@ import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
-//import vn.nws.liveeffects.EffectWrapper
+import vn.nws.liveeffects.EffectWrapper
 import java.nio.ByteBuffer
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import it.thoson.flutter_agora_demo.YUVUtils
@@ -46,11 +46,19 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
   var newI420: ByteArray? = null
   var newBitmap: Bitmap? = null
 
+  var mWrapper: EffectWrapper? = null
+
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "agora_rtc_rawdata")
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
     OpenCVLoader.initDebug()
+    mWrapper = EffectWrapper(context)
+    mWrapper?.SetBeauty(
+      mWrapper!!.mWrapper,
+      2,
+      1
+    )
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -112,13 +120,15 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
 
               //Step 2: Process data
               val originMat = Mat()
-              val newMat = Mat()
+//              val newMat = Mat()
               Utils.bitmapToMat(originBitmap, originMat)
 
-              Imgproc.cvtColor(originMat, newMat, Imgproc.COLOR_RGB2GRAY);
+//              Imgproc.cvtColor(originMat, newMat, Imgproc.COLOR_RGB2GRAY);
+              mWrapper?.Apply(mWrapper!!.mWrapper, originMat.nativeObjAddr)
 
-              newBitmap = Bitmap.createBitmap(originMat.cols(), originMat.rows(), Bitmap.Config.ARGB_8888)
-              Utils.matToBitmap(newMat, newBitmap!!)
+              newBitmap =
+                Bitmap.createBitmap(originMat.cols(), originMat.rows(), Bitmap.Config.ARGB_8888)
+              Utils.matToBitmap(originMat, newBitmap!!)
 
               //Step 3: Convert Bitmap to i420 buffer
               newI420 = YUVUtils.bitmapToI420(originMat.cols(), originMat.rows(), newBitmap!!)
@@ -132,7 +142,8 @@ class AgoraRtcRawdataPlugin : FlutterPlugin, MethodCallHandler {
                 videoFrame.getuBuffer()[i] = newI420!![videoFrame.getyBuffer().size + i]
               }
               for (i in videoFrame.getvBuffer().indices) {
-                videoFrame.getvBuffer()[i] = newI420!![videoFrame.getyBuffer().size + videoFrame.getuBuffer().size + i]
+                videoFrame.getvBuffer()[i] =
+                  newI420!![videoFrame.getyBuffer().size + videoFrame.getuBuffer().size + i]
               }
               return true
             }
