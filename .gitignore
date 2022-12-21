@@ -10,9 +10,9 @@ gitpush.sh
 .pub/
 
 build/
-*.lock
+#*.lock
 *.*~
-example/*.lock
+#example/*.lock
 example/ios/Podfile.lock.classpath
 .project
 .settings
