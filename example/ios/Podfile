@@ -31,6 +31,9 @@ target 'Runner' do
 #   use_frameworks!
   use_modular_headers!
 
+  pod 'Firebase/MLVision', '~> 6.10'
+  pod 'Firebase/MLVisionFaceModel'
+  pod 'Firebase/Core', "~> 6.15.0"
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
