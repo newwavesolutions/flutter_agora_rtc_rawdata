@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <opencv2/opencv.hpp>
 
 NS_ASSUME_NONNULL_BEGIN
 

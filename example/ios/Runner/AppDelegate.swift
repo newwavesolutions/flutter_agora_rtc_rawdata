@@ -1,17 +1,35 @@
 import UIKit
 import Flutter
 import agora_rtc_rawdata
+import FirebaseCore
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, AgoraRawDataProcessorDelegate {
+    
+    private var effectWrapper: EffectWrapper?
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
+        
+        //Init Firebase
+        FirebaseApp.configure()
+        
+        //Init filter wrapper
+        effectWrapper = EffectWrapper.init()
+        let effectConfig = EffectConfig.default()
+        effectWrapper?.prepare(effectConfig)
+        effectWrapper?.iFilter = EFFECT_FILTER(
+            rawValue:UInt(SWIFT_EFFECT_FILTER.FILTER_COOL.rawValue)
+        )
+        effectWrapper?.startProcessing()
 
+        // Add delete to process data from lib
         AgoraRawDataProcessor.shared.delegate = self
-
+        
+        // Flutter function
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 }
@@ -22,9 +40,11 @@ extension AppDelegate {
 //        memset(videoFrame.uBuffer, 0, Int(videoFrame.uStride * videoFrame.height) / 2)
 //        memset(videoFrame.vBuffer, 0, Int(videoFrame.vStride * videoFrame.height) / 2)
         
+        guard let pixelBuffer = pixelBuffer else { return true }
         
-        if let pixelBuffer = pixelBuffer,
-              CVPixelBufferLockBaseAddress(pixelBuffer, []) == kCVReturnSuccess  {
+        effectWrapper?.apply(on: nil, on: pixelBuffer)
+        
+        if CVPixelBufferLockBaseAddress(pixelBuffer, []) == kCVReturnSuccess  {
             
             let yPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
             let yPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
@@ -108,4 +128,51 @@ func createPixelBufferWithVideoFrame(_ frame: AgoraVideoFrame) -> CVPixelBuffer?
     CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
     
     return pixelBuffer
+}
+
+
+enum SWIFT_EFFECT_FILTER: Int, CaseIterable {
+    case FILTER_NONE = 2000
+    case FILTER_WARM = 2001
+    case FILTER_COOL = 2002
+    case FILTER_ROSE = 2003
+    case FILTER_SKETCH = 2004
+    case FILTER_AUTUMN = 2005
+    case FILTER_BONE = 2006
+    case FILTER_CARTOON = 2007
+    case FILTER_FREEZE = 2008
+    case FILTER_OCEAN = 2009
+    case FILTER_PARULA = 2010
+    case FILTER_SUNSET = 2011
+    
+    func idOf(index: Int) -> Int {
+        switch index {
+        case 0:
+            return SWIFT_EFFECT_FILTER.FILTER_NONE.rawValue
+        case 1:
+            return SWIFT_EFFECT_FILTER.FILTER_WARM.rawValue
+        case 2:
+            return SWIFT_EFFECT_FILTER.FILTER_COOL.rawValue
+        case 3:
+            return SWIFT_EFFECT_FILTER.FILTER_ROSE.rawValue
+        case 4:
+            return SWIFT_EFFECT_FILTER.FILTER_SKETCH.rawValue
+        case 5:
+            return SWIFT_EFFECT_FILTER.FILTER_AUTUMN.rawValue
+        case 6:
+            return SWIFT_EFFECT_FILTER.FILTER_BONE.rawValue
+        case 7:
+            return SWIFT_EFFECT_FILTER.FILTER_CARTOON.rawValue
+        case 8:
+            return SWIFT_EFFECT_FILTER.FILTER_FREEZE.rawValue
+        case 9:
+            return SWIFT_EFFECT_FILTER.FILTER_OCEAN.rawValue
+        case 10:
+            return SWIFT_EFFECT_FILTER.FILTER_PARULA.rawValue
+        case 11:
+            return SWIFT_EFFECT_FILTER.FILTER_SUNSET.rawValue
+        default:
+            return SWIFT_EFFECT_FILTER.FILTER_NONE.rawValue
+        }
+    }
 }
