@@ -110,8 +110,8 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2295B45F2955823000202D05 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		2295B4602955890400202D05 /* OpenCVWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp.preprocessed; path = OpenCVWrapper.h; sourceTree = "<group>"; };
-		2295B4612955890400202D05 /* OpenCVWrapper.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp.preprocessed; path = OpenCVWrapper.m; sourceTree = "<group>"; };
+		2295B4602955890400202D05 /* OpenCVWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenCVWrapper.h; sourceTree = "<group>"; };
+		2295B4612955890400202D05 /* OpenCVWrapper.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenCVWrapper.m; sourceTree = "<group>"; };
 		229E01F8295C888400AE22B7 /* blend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = blend.cpp; sourceTree = "<group>"; };
 		229E01F9295C888400AE22B7 /* facemark.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facemark.h; sourceTree = "<group>"; };
 		229E01FA295C888500AE22B7 /* effect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect.h; sourceTree = "<group>"; };
