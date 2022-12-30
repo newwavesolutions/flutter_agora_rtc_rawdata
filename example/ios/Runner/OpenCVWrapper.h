@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable CVPixelBufferRef) convertFrame2CVPixelBuffer: (AgoraVideoFrame *) frame;
 
+- (void) myAssign: (CVPixelBufferRef) pixelBuffer to: (AgoraVideoFrame *) frame;
+
 @end
 
 NS_ASSUME_NONNULL_END
