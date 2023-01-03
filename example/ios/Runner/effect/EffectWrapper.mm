@@ -157,7 +157,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
 
 - (void) applyOnSampleBuffer:(CMSampleBufferRef)sampleBuffer OnImageBuffer:(CVImageBufferRef)imageBuffer {
     int64_t t = [self getCurrentMilis];
-    int rotation = [self getRotation];
+    int rotation = [self getRotation4Agora];
 //    rotation = cv::ROTATE_90_CLOCKWISE;
 #ifdef IMG_DEBUG_LOG
     NSLog(@"rotation: %d", rotation);
@@ -180,10 +180,10 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
         filter = [self getEffect:self.iFilter];
         mFilter = self.iFilter;
     }
-//    if (self.iBeauty != mBeauty) {
-//        beauty = [self getEffect:self.iBeauty];
-//        mBeauty = self.iBeauty;
-//    }
+    if (self.iBeauty != mBeauty) {
+        beauty = [self getEffect:self.iBeauty];
+        mBeauty = self.iBeauty;
+    }
     if (self.iSticker != mSticker) {
         sticker = [self getEffect:self.iSticker];
         mSticker = self.iSticker;
@@ -292,6 +292,22 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
             rotate = cv::ROTATE_90_COUNTERCLOCKWISE;
         } else if (angle > M_PI + M_PI_4 && angle < 2 * M_PI - M_PI_4) {
             rotate = cv::ROTATE_180;
+        }
+    }
+    
+    return rotate;
+}
+
+- (int) getRotation4Agora {
+    int rotate = -1;
+    if (self.manager != nil && self.manager.deviceMotion != nil) {
+        double angle = abs(atan2(self.manager.deviceMotion.gravity.x, self.manager.deviceMotion.gravity.y) - M_PI);
+        if (angle > M_PI_4 && angle < M_PI_2 + M_PI_4) {
+            rotate = cv::ROTATE_90_COUNTERCLOCKWISE;
+        } else if (angle > M_PI_2 + M_PI_4 && angle < M_PI + M_PI_4) {
+            rotate = cv::ROTATE_180;
+        } else if (angle > M_PI + M_PI_4 && angle < 2 * M_PI - M_PI_4) {
+            rotate = cv::ROTATE_90_CLOCKWISE;
         }
     }
     

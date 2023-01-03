@@ -25,11 +25,14 @@ import CoreMedia
         effectWrapper = EffectWrapper.init()
         let effectConfig = EffectConfig.default()
         effectWrapper?.prepare(effectConfig)
-        effectWrapper?.iFilter = EFFECT_FILTER(
-            rawValue:UInt(SWIFT_EFFECT_FILTER.FILTER_CARTOON.rawValue)
-        )
+//        effectWrapper?.iFilter = EFFECT_FILTER(
+//            rawValue:UInt(SWIFT_EFFECT_FILTER.FILTER_CARTOON.rawValue)
+//        )
         effectWrapper?.iBeauty = EFFECT_BEAUTY(
             rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_BIGEYE.rawValue)
+        )
+        effectWrapper?.iSticker = EFFECT_STICKER(
+            rawValue:UInt(SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue)
         )
         effectWrapper?.startProcessing()
 
@@ -283,6 +286,106 @@ enum SWIFT_EFFECT_BEAUTY: Int, CaseIterable {
             return SWIFT_EFFECT_BEAUTY.BEAUTY_VFACE.rawValue
         default:
             return SWIFT_EFFECT_BEAUTY.BEAUTY_NONE.rawValue
+        }
+    }
+
+}
+
+enum SWIFT_EFFECT_STICKER: Int, CaseIterable {
+    case STICKER_NONE = 0
+    case STICKER_MIKE_GLASSES = 1
+    case STICKER_STAR_GLASS = 2
+    case STICKER_MIKE_NOSE = 3
+    
+    case STICKER_ANGEL = 4
+    case STICKER_BEAR = 5
+    case STICKER_CAT = 6
+    case STICKER_CAT2 = 7
+    case STICKER_CORGI = 8
+    case STICKER_DEVIL = 9
+    case STICKER_DOG = 10
+    
+    var name: String {
+        switch self {
+        case .STICKER_NONE:
+            return "Sticker.None"
+        case .STICKER_MIKE_GLASSES:
+            return "Sticker.MikeGlass"
+        case .STICKER_STAR_GLASS:
+            return "Sticker.StarGlass"
+        case .STICKER_MIKE_NOSE:
+            return "Sticker.MikeNose"
+        case .STICKER_ANGEL:
+            return "Sticker.Angel"
+        case .STICKER_BEAR:
+            return "Sticker.Bear"
+        case .STICKER_CAT:
+            return "Sticker.Cat"
+        case .STICKER_CAT2:
+            return "Sticker.Cat2"
+        case .STICKER_CORGI:
+            return "Sticker.Corgi"
+        case .STICKER_DEVIL:
+            return "Sticker.Devil"
+        case .STICKER_DOG:
+            return "Sticker.Dog"
+        }
+    }
+    
+    var thumb: String {
+        switch self {
+        case .STICKER_NONE:
+            return "none"
+        case .STICKER_MIKE_GLASSES:
+            return "mike_glass"
+        case .STICKER_STAR_GLASS:
+            return "star_glass"
+        case .STICKER_MIKE_NOSE:
+            return "mike_nose"
+            
+        case .STICKER_ANGEL:
+            return "angel"
+        case .STICKER_BEAR:
+            return "bear"
+        case .STICKER_CAT:
+            return "cat"
+        case .STICKER_CAT2:
+            return "cat2"
+        case .STICKER_CORGI:
+            return "corgi"
+        case .STICKER_DEVIL:
+            return "devil"
+        case .STICKER_DOG:
+            return "dog"
+        }
+    }
+    
+    func idOf(index: Int) -> Int {
+        switch index {
+        case 0:
+            return SWIFT_EFFECT_STICKER.STICKER_NONE.rawValue
+        case 1:
+            return SWIFT_EFFECT_STICKER.STICKER_MIKE_GLASSES.rawValue
+        case 2:
+            return SWIFT_EFFECT_STICKER.STICKER_STAR_GLASS.rawValue
+        case 3:
+            return SWIFT_EFFECT_STICKER.STICKER_MIKE_NOSE.rawValue
+        case 4:
+            return SWIFT_EFFECT_STICKER.STICKER_ANGEL.rawValue
+        case 5:
+            return SWIFT_EFFECT_STICKER.STICKER_BEAR.rawValue
+        case 6:
+            return SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue
+        case 7:
+            return SWIFT_EFFECT_STICKER.STICKER_CAT2.rawValue
+        case 8:
+            return SWIFT_EFFECT_STICKER.STICKER_CORGI.rawValue
+        case 9:
+            return SWIFT_EFFECT_STICKER.STICKER_DEVIL.rawValue
+        case 10:
+            return SWIFT_EFFECT_STICKER.STICKER_DOG.rawValue
+        default:
+            return SWIFT_EFFECT_STICKER.STICKER_NONE.rawValue
         }
     }
 

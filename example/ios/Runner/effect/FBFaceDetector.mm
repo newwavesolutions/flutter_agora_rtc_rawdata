@@ -11,6 +11,8 @@
 @interface FBFaceDetector ()
 
 @property (nonatomic, strong) FIRVisionFaceDetector *faceDetector;
+@property (nonatomic, strong) NSArray<FIRVisionFace *> *lastFaces;
+@property (nonatomic, assign) int detectCount;
 
 @end
 
@@ -25,46 +27,55 @@
         FIRVision *vision = [FIRVision vision];
         self.faceDetector = [vision faceDetectorWithOptions:options];
         self.scale = scale;
+        self.detectCount = 0;
+        self.lastFaces = nil;
     }
     return self;
 }
 
 - (nullable NSArray<FIRVisionFace *> *) detectFaces:(CVImageBufferRef)imageBuffer rotation:(int)rotate {
     int64_t t = (int64_t) (NSDate.timeIntervalSinceReferenceDate * 1000);
-    // buffer to ciimage
-    CIImage *cimage = [[CIImage alloc] initWithCVImageBuffer:imageBuffer];
-    int rotation = 0;
-    if (rotate >= 0) {
-        if (rotate == 0) {
-            rotation = kCGImagePropertyOrientationRight;
-        } else if (rotate == 1) {
-            rotation = kCGImagePropertyOrientationDown;
-        } else if (rotate == 2) {
-            rotation = kCGImagePropertyOrientationLeft;
-        }
-        cimage = [cimage imageByApplyingOrientation:rotation];
+    if (self.detectCount >= 0) {
+        // buffer to ciimage
+        CIImage *cimage = [[CIImage alloc] initWithCVImageBuffer:imageBuffer];
+        int rotation = 0;
+//        if (rotate >= 0) {
+//            if (rotate == 0) {
+                rotation = kCGImagePropertyOrientationRight;
+//            } else if (rotate == 1) {
+//                rotation = kCGImagePropertyOrientationDown;
+//            } else if (rotate == 2) {
+//                rotation = kCGImagePropertyOrientationLeft;
+//            }
+            cimage = [cimage imageByApplyingOrientation:rotation];
+//        }
+        
+        // scale down
+        CIFilter *filter = [CIFilter filterWithName:@"CILanczosScaleTransform"];
+        [filter setValue:cimage forKey:kCIInputImageKey];
+        [filter setValue:@(self.scale) forKey:kCIInputScaleKey];
+        [filter setValue:@(1.0) forKey:kCIInputAspectRatioKey];
+        CIImage *ciimage = [filter valueForKey:kCIOutputImageKey];
+        CIContext *context = [CIContext contextWithOptions:nil];
+        CGImageRef ref = [context createCGImage:ciimage fromRect:ciimage.extent];
+        // convert to uiimage
+        UIImage *tmp = [UIImage imageWithCGImage:ref];
+        CFRelease(ref);
+        // create firebase vision image with metadata
+        FIRVisionImage *image = [[FIRVisionImage alloc] initWithImage:tmp];
+        FIRVisionImageMetadata *metadata = [[FIRVisionImageMetadata alloc] init];
+        image.metadata = metadata;
+        NSError *err;
+        NSArray<FIRVisionFace *> *faces = [self.faceDetector resultsInImage:image error:&err];
+        self.lastFaces = faces;
     }
-    
-    // scale down
-    CIFilter *filter = [CIFilter filterWithName:@"CILanczosScaleTransform"];
-    [filter setValue:cimage forKey:kCIInputImageKey];
-    [filter setValue:@(self.scale) forKey:kCIInputScaleKey];
-    [filter setValue:@(1.0) forKey:kCIInputAspectRatioKey];
-    CIImage *ciimage = [filter valueForKey:kCIOutputImageKey];
-    CIContext *context = [CIContext contextWithOptions:nil];
-    CGImageRef ref = [context createCGImage:ciimage fromRect:ciimage.extent];
-    // convert to uiimage
-    UIImage *tmp = [UIImage imageWithCGImage:ref];
-    CFRelease(ref);
-    // create firebase vision image with metadata
-    FIRVisionImage *image = [[FIRVisionImage alloc] initWithImage:tmp];
-    FIRVisionImageMetadata *metadata = [[FIRVisionImageMetadata alloc] init];
-    image.metadata = metadata;
-    NSError *err;
-    NSArray<FIRVisionFace *> *faces = [self.faceDetector resultsInImage:image error:&err];
+    self.detectCount -= 1;
+    if (self.detectCount < -2) {
+        self.detectCount = 0;
+    }
     t = (int64_t) (NSDate.timeIntervalSinceReferenceDate * 1000) - t;
-    //NSLog(@"detectFaces: %d", (int)t);
-    return faces;
+    NSLog(@"detectFaces: %d", (int)t);
+    return self.lastFaces;
 }
 
 - (nullable NSArray<FIRVisionFace *> *) detectFacesWith:(CMSampleBufferRef)sampleBuffer rotation:(int)rotate
