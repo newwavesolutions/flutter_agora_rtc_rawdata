@@ -29,8 +29,13 @@ import VideoToolbox
 //        effectWrapper?.iFilter = EFFECT_FILTER(
 //            rawValue:UInt(SWIFT_EFFECT_FILTER.FILTER_CARTOON.rawValue)
 //        )
-        effectWrapper?.iBeauty = EFFECT_BEAUTY(
-            rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_BIGEYE.rawValue)
+        let beautifyEnum = EFFECT_BEAUTY(
+            rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_VFACE.rawValue)
+        )
+        effectWrapper?.iBeauty = beautifyEnum
+        effectWrapper?.setBeauty(
+            beautifyEnum,
+            quality: 100
         )
 //        effectWrapper?.iSticker = EFFECT_STICKER(
 //            rawValue:UInt(SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue)

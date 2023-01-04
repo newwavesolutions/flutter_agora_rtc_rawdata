@@ -157,8 +157,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
 
 - (void) applyOnSampleBuffer:(CMSampleBufferRef)sampleBuffer OnImageBuffer:(CVImageBufferRef)imageBuffer {
     int64_t t = [self getCurrentMilis];
-    int rotation = [self getRotation4Agora];
-    rotation = cv::ROTATE_90_CLOCKWISE;
+    int rotation = [self getRotation];
 #ifdef IMG_DEBUG_LOG
     NSLog(@"rotation: %d", rotation);
 #endif
