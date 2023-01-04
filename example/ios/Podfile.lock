@@ -5,7 +5,6 @@ PODS:
   - agora_rtc_rawdata (0.1.0):
     - AgoraIrisRTC_iOS (= 3.6.2-fix.1)
     - Flutter
-    - OpenCV2
   - AgoraIrisRTC_iOS (3.6.2-fix.1)
   - Firebase/Core (6.15.0):
     - Firebase/CoreOnly
@@ -126,7 +125,7 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - OpenCV2 (4.3.0)
+  - OpenCV (4.1.0)
   - "permission_handler (5.1.0+2)":
     - Flutter
   - PromisesObjC (1.2.12)
@@ -139,6 +138,7 @@ DEPENDENCIES:
   - Firebase/MLVision (~> 6.10)
   - Firebase/MLVisionFaceModel
   - Flutter (from `Flutter`)
+  - OpenCV (~> 4.1.0)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
 SPEC REPOS:
@@ -162,7 +162,7 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - nanopb
-    - OpenCV2
+    - OpenCV
     - PromisesObjC
     - Protobuf
 
@@ -178,7 +178,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   agora_rtc_engine: ffc530eff766a38272568ebaead9341d73f58856
-  agora_rtc_rawdata: 3d8e7c315b44d154878930fa11374b5b4fea82c5
+  agora_rtc_rawdata: c57869a625d576f788aaee77369ef3616c9ea422
   AgoraIrisRTC_iOS: 9b11083bb79048ae4db7e2f56109cc51ac9e3834
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
@@ -199,11 +199,11 @@ SPEC CHECKSUMS:
   GoogleUtilities: 7f2f5a07f888cdb145101d6042bc4422f57e70b3
   GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  OpenCV2: ffe82e5cb5d16dc3fc01a5f4127b9a5b3cfc7d1b
+  OpenCV: 52cd4d72ff29e2be83421477aec5447320b7fb19
   permission_handler: ccb20a9fad0ee9b1314a52b70b76b473c5f8dab0
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
 
-PODFILE CHECKSUM: d575de5f674f158b81a9efbfd2853d9f22aa0657
+PODFILE CHECKSUM: 8c860830aaee7012a2c62ab4d15ad638a25c543f
 
 COCOAPODS: 1.11.3

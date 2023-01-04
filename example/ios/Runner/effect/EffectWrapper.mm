@@ -158,7 +158,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
 - (void) applyOnSampleBuffer:(CMSampleBufferRef)sampleBuffer OnImageBuffer:(CVImageBufferRef)imageBuffer {
     int64_t t = [self getCurrentMilis];
     int rotation = [self getRotation4Agora];
-//    rotation = cv::ROTATE_90_CLOCKWISE;
+    rotation = cv::ROTATE_90_CLOCKWISE;
 #ifdef IMG_DEBUG_LOG
     NSLog(@"rotation: %d", rotation);
 #endif
@@ -208,7 +208,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
         filter->apply(img);
         dirty = true;
     }
-    if (beauties.size() > 0 || sticker != NULL) {
+    if (beauties.size() > 0 || sticker != NULL || YES) {
         if (self.config.detectorType == FACE_DETECTOR_OPENCV_CASCADE) {
             detector.detectFaces(imgOriginGray, faces);
         } else {
@@ -812,7 +812,7 @@ NSString* deviceName()
 //    model = @"iPhone10";
     NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
     f.numberStyle = NSNumberFormatterDecimalStyle;
-    config.faceScale = 0.15;
+    config.faceScale = 0.2;
     config.detectorType = FACE_DETECTOR_GG_MLKIT;
     config.videoSize = FACE_VIDEO_640;
 //    if ([model hasPrefix:@"iPhone"]) {

@@ -34,6 +34,7 @@ target 'Runner' do
   pod 'Firebase/MLVision', '~> 6.10'
   pod 'Firebase/MLVisionFaceModel'
   pod 'Firebase/Core', "~> 6.15.0"
+  pod 'OpenCV', "~> 4.1.0"
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 

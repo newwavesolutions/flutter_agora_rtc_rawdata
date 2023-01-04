@@ -4,6 +4,7 @@ import agora_rtc_rawdata
 import FirebaseCore
 import Accelerate
 import CoreMedia
+import VideoToolbox
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, AgoraRawDataProcessorDelegate {
@@ -31,9 +32,9 @@ import CoreMedia
         effectWrapper?.iBeauty = EFFECT_BEAUTY(
             rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_BIGEYE.rawValue)
         )
-        effectWrapper?.iSticker = EFFECT_STICKER(
-            rawValue:UInt(SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue)
-        )
+//        effectWrapper?.iSticker = EFFECT_STICKER(
+//            rawValue:UInt(SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue)
+//        )
         effectWrapper?.startProcessing()
 
         // Add delete to process data from lib
