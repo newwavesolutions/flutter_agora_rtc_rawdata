@@ -5,6 +5,7 @@ PODS:
   - agora_rtc_rawdata (0.1.0):
     - AgoraIrisRTC_iOS (= 3.6.2-fix.1)
     - Flutter
+    - OpenCV (= 4.1.0)
   - AgoraIrisRTC_iOS (3.6.2-fix.1)
   - Firebase/Core (6.15.0):
     - Firebase/CoreOnly
@@ -138,7 +139,6 @@ DEPENDENCIES:
   - Firebase/MLVision (~> 6.10)
   - Firebase/MLVisionFaceModel
   - Flutter (from `Flutter`)
-  - OpenCV (~> 4.1.0)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
 
 SPEC REPOS:
@@ -178,7 +178,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   agora_rtc_engine: ffc530eff766a38272568ebaead9341d73f58856
-  agora_rtc_rawdata: c57869a625d576f788aaee77369ef3616c9ea422
+  agora_rtc_rawdata: 1238fcdaaa22f94fbe9f880eb24ef87ecc79a8a3
   AgoraIrisRTC_iOS: 9b11083bb79048ae4db7e2f56109cc51ac9e3834
   Firebase: 5d77105d9740a07ca6b16927ca971db7e860faaf
   FirebaseAnalytics: e83e64b1231dedcd9ddd4bdecd9bcfd6ba341679
@@ -204,6 +204,6 @@ SPEC CHECKSUMS:
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   Protobuf: 120350fc38646e2dedc26f49ecba778184ea1de2
 
-PODFILE CHECKSUM: 8c860830aaee7012a2c62ab4d15ad638a25c543f
+PODFILE CHECKSUM: d575de5f674f158b81a9efbfd2853d9f22aa0657
 
 COCOAPODS: 1.11.3

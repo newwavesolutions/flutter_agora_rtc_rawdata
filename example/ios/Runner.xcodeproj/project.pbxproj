@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
-		2295B4622955890400202D05 /* OpenCVWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2295B4612955890400202D05 /* OpenCVWrapper.m */; };
 		229E0201295C888500AE22B7 /* blend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 229E01F8295C888400AE22B7 /* blend.cpp */; };
 		229E0202295C888500AE22B7 /* facemark.h in Sources */ = {isa = PBXBuildFile; fileRef = 229E01F9295C888400AE22B7 /* facemark.h */; };
 		229E0203295C888500AE22B7 /* effect.h in Sources */ = {isa = PBXBuildFile; fileRef = 229E01FA295C888500AE22B7 /* effect.h */; };
@@ -110,8 +109,6 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2295B45F2955823000202D05 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
-		2295B4602955890400202D05 /* OpenCVWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenCVWrapper.h; sourceTree = "<group>"; };
-		2295B4612955890400202D05 /* OpenCVWrapper.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; path = OpenCVWrapper.m; sourceTree = "<group>"; };
 		229E01F8295C888400AE22B7 /* blend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = blend.cpp; sourceTree = "<group>"; };
 		229E01F9295C888400AE22B7 /* facemark.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = facemark.h; sourceTree = "<group>"; };
 		229E01FA295C888500AE22B7 /* effect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect.h; sourceTree = "<group>"; };
@@ -402,8 +399,6 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
 				2295B45F2955823000202D05 /* PrefixHeader.pch */,
-				2295B4602955890400202D05 /* OpenCVWrapper.h */,
-				2295B4612955890400202D05 /* OpenCVWrapper.m */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -650,7 +645,6 @@
 				229E0209295C888500AE22B7 /* facedetector.cpp in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
-				2295B4622955890400202D05 /* OpenCVWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
