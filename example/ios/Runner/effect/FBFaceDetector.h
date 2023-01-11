@@ -9,7 +9,7 @@
 #include <opencv2/opencv.hpp>
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
-#import <FirebaseMLVision/FirebaseMLVision.h>
+#import <MLKitFaceDetection/MLKFace.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,8 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) double scale;
 
 - (id) initWith:(double)scale;
-- (nullable NSArray<FIRVisionFace *> *) detectFaces:(CVImageBufferRef)imageBuffer rotation:(int)rotate;
-- (nullable NSArray<FIRVisionFace *> *) detectFacesWith:(CMSampleBufferRef)sampleBuffer rotation:(int)rotate;
+- (nullable NSArray<MLKFace *> *) detectFaces:(CVImageBufferRef)imageBuffer rotation:(int)rotate;
+- (nullable NSArray<MLKFace *> *) detectFacesWith:(CMSampleBufferRef)sampleBuffer rotation:(int)rotate;
 
 @end
 

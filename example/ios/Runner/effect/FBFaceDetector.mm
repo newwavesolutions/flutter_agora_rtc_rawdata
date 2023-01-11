@@ -7,12 +7,16 @@
 //
 
 #import "FBFaceDetector.h"
-#import <VideoToolbox/VideoToolbox.h>
+#import <MLKitFaceDetection/MLKFace.h>
+#import <MLKitFaceDetection/MLKFaceDetector.h>
+#import <MLKitFaceDetection/MLKFaceDetectorOptions.h>
+#import <MLKitVision/MLKitVision.h>
+#import <UIKit/UIKit.h>
 
 @interface FBFaceDetector ()
 
-@property (nonatomic, strong) FIRVisionFaceDetector *faceDetector;
-@property (nonatomic, strong) NSArray<FIRVisionFace *> *lastFaces;
+@property (nonatomic, strong) MLKFaceDetector *faceDetector;
+@property (nonatomic, strong) NSArray<MLKFace *> *lastFaces;
 @property (nonatomic, assign) int detectCount;
 
 @end
@@ -23,10 +27,10 @@
     self = [super init];
     if (self != nil) {
         // Real-time contour detection of multiple faces
-        FIRVisionFaceDetectorOptions *options = [[FIRVisionFaceDetectorOptions alloc] init];
-        options.contourMode = FIRVisionFaceDetectorContourModeNone;
-        FIRVision *vision = [FIRVision vision];
-        self.faceDetector = [vision faceDetectorWithOptions:options];
+        MLKFaceDetectorOptions *options = [[MLKFaceDetectorOptions alloc] init];
+        options.contourMode = MLKFaceDetectorContourModeAll;
+//        options.contourMode = FIRVisionFaceDetectorContourModeNone;
+        self.faceDetector = [MLKFaceDetector faceDetectorWithOptions:options];
         self.scale = scale;
         self.detectCount = 0;
         self.lastFaces = nil;
@@ -34,7 +38,7 @@
     return self;
 }
 
-- (nullable NSArray<FIRVisionFace *> *) detectFaces:(CVImageBufferRef)imageBuffer rotation:(int)rotate {
+- (nullable NSArray<MLKFace *> *) detectFaces:(CVImageBufferRef)imageBuffer rotation:(int)rotate {
     int64_t t = (int64_t) (NSDate.timeIntervalSinceReferenceDate * 1000);
     if (self.detectCount >= 0) {
         // buffer to ciimage
@@ -65,11 +69,12 @@
         UIImage *uiImage = [UIImage imageWithCGImage:videoImage];
         CGImageRelease(videoImage);
         // create firebase vision image with metadata
-        FIRVisionImage *image = [[FIRVisionImage alloc] initWithImage:uiImage];
-        FIRVisionImageMetadata *metadata = [[FIRVisionImageMetadata alloc] init];
-        image.metadata = metadata;
+        MLKVisionImage *image = [[MLKVisionImage alloc] initWithImage:uiImage];
+        image.orientation = UIImageOrientationUp;
+//        FIRVisionImageMetadata *metadata = [[FIRVisionImageMetadata alloc] init];
+//        image.metadata = metadata;
         NSError *err;
-        NSArray<FIRVisionFace *> *faces = [self.faceDetector resultsInImage:image error:&err];
+        NSArray<MLKFace *> *faces = [self.faceDetector resultsInImage:image error:&err];
         self.lastFaces = faces;
     }
     self.detectCount -= 1;
@@ -81,7 +86,7 @@
     return self.lastFaces;
 }
 
-- (nullable NSArray<FIRVisionFace *> *) detectFacesWith:(CMSampleBufferRef)sampleBuffer rotation:(int)rotate
+- (nullable NSArray<MLKFace *> *) detectFacesWith:(CMSampleBufferRef)sampleBuffer rotation:(int)rotate
 {
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     return [self detectFaces:imageBuffer rotation:rotate];
