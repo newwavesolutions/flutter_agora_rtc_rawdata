@@ -91,8 +91,8 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             BeautyEffectWidget(
-              onBeautyEffectChanged: (value) {
-                AgoraRtcRawdata.setBeautyEffect(type: value, value: 100);
+              onBeautyEffectChanged: ({BeautyEffect? type, double? value}) {
+                AgoraRtcRawdata.setBeautyEffect(type: type ?? BeautyEffect.None, value: value?.toInt().toDouble() ?? 0);
               },
             ),
             Expanded(
