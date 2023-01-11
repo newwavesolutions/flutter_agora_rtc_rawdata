@@ -11,7 +11,7 @@ import VideoToolbox
     
     private var effectWrapper: EffectWrapper?
     
-    let cv = OpenCVWrapper()
+    let liveEffectHelper = LiveEffectHelper()
     
     override func application(
         _ application: UIApplication,
@@ -26,20 +26,6 @@ import VideoToolbox
         effectWrapper = EffectWrapper.init()
         let effectConfig = EffectConfig.default()
         effectWrapper?.prepare(effectConfig)
-//        effectWrapper?.iFilter = EFFECT_FILTER(
-//            rawValue:UInt(SWIFT_EFFECT_FILTER.FILTER_CARTOON.rawValue)
-//        )
-        let beautifyEnum = EFFECT_BEAUTY(
-            rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_VFACE.rawValue)
-        )
-        effectWrapper?.iBeauty = beautifyEnum
-        effectWrapper?.setBeauty(
-            beautifyEnum,
-            quality: 100
-        )
-//        effectWrapper?.iSticker = EFFECT_STICKER(
-//            rawValue:UInt(SWIFT_EFFECT_STICKER.STICKER_CAT.rawValue)
-//        )
         effectWrapper?.startProcessing()
 
         // Add delete to process data from lib
@@ -52,112 +38,25 @@ import VideoToolbox
 
 extension AppDelegate {
     func onCapture(_ videoFrame: AgoraVideoFrame) -> Bool {
-        let pixelBuffer1: CVPixelBuffer? = cv.convertFrame2CVPixelBuffer(videoFrame)?.takeRetainedValue()
-//        let pixelBuffer = createPixelBufferWithVideoFrame(videoFrame)
-//        memset(videoFrame.uBuffer, 0, Int(videoFrame.uStride * videoFrame.height) / 2)
-//        memset(videoFrame.vBuffer, 0, Int(videoFrame.vStride * videoFrame.height) / 2)
-        
-        guard let pixelBuffer1 = pixelBuffer1 else { return true }
-//
-        effectWrapper?.apply(on: nil, on: pixelBuffer1)
-        cv.myAssign(pixelBuffer1, to: videoFrame)
-        
-//        guard let pixelBuffer = pixelBuffer else { return true }
-//////
-//        if CVPixelBufferLockBaseAddress(pixelBuffer, []) == kCVReturnSuccess  {
-//
-//            let yPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
-//            let yPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
-//
-//            let uPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 1)
-//            let uPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 1)
-//
-//            let vPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 2)
-//            let vPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 2)
-//
-//
-//            memset(videoFrame.yBuffer, 0, Int(videoFrame.yStride * videoFrame.height))
-//            memset(videoFrame.uBuffer, 0, Int(videoFrame.uStride * videoFrame.height) / 2)
-//            memset(videoFrame.vBuffer, 0, Int(videoFrame.vStride * videoFrame.height) / 2)
-//
-//            let yBuffer = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-//            memcpy(videoFrame.yBuffer, yBuffer, yPlaneWidth * yPlaneHeight)
-//
-//            let uBuffer = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1)
-//            memcpy(videoFrame.uBuffer, uBuffer, uPlaneWidth * uPlaneHeight)
-//
-//            let vBuffer = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 2)
-//            memcpy(videoFrame.vBuffer, vBuffer, vPlaneWidth * vPlaneHeight)
-//
-//            CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
-//        }
-
+        let pixelBuffer: CVPixelBuffer? = liveEffectHelper.convertVideoFrame2PixelBuffer(videoFrame)?.takeRetainedValue()
+        guard let pixelBuffer = pixelBuffer else { return true }
+        effectWrapper?.apply(on: nil, on: pixelBuffer)
+        liveEffectHelper.convertPixelBuffer2VideoFrame(pixelBuffer, to: videoFrame)
         return true
     }
-}
-
-//kCVPixelFormatType_420YpCbCr8Planar => ok
-//kCVPixelFormatType_420YpCbCr8PlanarFullRange => ok
-//kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange => NG
-//kCVPixelFormatType_420YpCbCr8BiPlanarFullRange => NG
-
-//kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange => NG
-//kCVPixelFormatType_420YpCbCr10BiPlanarFullRange => NG
-//kCVPixelFormatType_420YpCbCr8VideoRange_8A_TriPlanar => NG
-
-func createPixelBufferWithVideoFrame(_ frame: AgoraVideoFrame) -> CVPixelBuffer? {
-    let attributes: [String: Any] = [
-        String(kCVPixelBufferMetalCompatibilityKey): true,
-        String(kCVPixelBufferOpenGLCompatibilityKey): true,
-        String(kCVPixelBufferIOSurfacePropertiesKey): [
-            String(kCVPixelBufferIOSurfaceOpenGLESTextureCompatibilityKey): true,
-            String(kCVPixelBufferIOSurfaceOpenGLESFBOCompatibilityKey): true,
-            String(kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey): true
-        ]
-    ]
     
-    var pixelBuffer: CVPixelBuffer? = nil
-    let _: CVReturn = CVPixelBufferCreate(kCFAllocatorDefault, Int(frame.width), Int(frame.height), kCVPixelFormatType_420YpCbCr8BiPlanarFullRange, attributes as CFDictionary, &pixelBuffer)
-    
-    guard let pixelBuffer = pixelBuffer,
-          CVPixelBufferLockBaseAddress(pixelBuffer, []) == kCVReturnSuccess else {
-        return nil
+    func didChangeBeauty(type: Int, value: Double) {
+        let beautifyEnum = EFFECT_BEAUTY(
+            rawValue:UInt(SWIFT_EFFECT_BEAUTY.BEAUTY_BIGEYE.idOf(index: type))
+        )
+        print("DidChangeBeauty: type = \(beautifyEnum) - value = \(value)")
+        effectWrapper?.resetBeauty()
+        effectWrapper?.setBeauty(
+            beautifyEnum,
+            quality: Float(value)
+        )
     }
-//
-    let yPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
-    let yPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
-
-    let uPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 1)
-    let uPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 1)
-//
-//    let vPlaneWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 2)
-//    let vPlaneHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 2)
-    
-    
-//    memcpy(yDestination, yBuffer, yPlaneWidth * yPlaneHeight)
-//
-    let yBuffer = frame.yBuffer
-    let uBuffer = frame.uBuffer
-    let vBuffer = frame.vBuffer
-//    let bytesPointer = UnsafeMutableRawPointer.allocate(byteCount: uPlaneWidth * uPlaneHeight * 2, alignment: 1)
-//    strcat(bytesPointer, uBuffer)
-//    strcat(bytesPointer, vBuffer)
-    let yDestination = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)
-    memcpy(yDestination, yBuffer,  yPlaneWidth * yPlaneHeight)
-    
-    let uvDestination = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1)
-//    uvDestination?.load(fromByteOffset: <#T##Int#>, as: Int.self)
-//    vBuffer.
-
-//    let vBuffer = frame.vBuffer
-//    let vDestination = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 2)
-//    memcpy(vDestination, vBuffer, vPlaneWidth * vPlaneHeight)
-    
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, [])
-    
-    return pixelBuffer
 }
-
 
 enum SWIFT_EFFECT_FILTER: Int, CaseIterable {
     case FILTER_NONE = 2000
@@ -394,5 +293,4 @@ enum SWIFT_EFFECT_STICKER: Int, CaseIterable {
             return SWIFT_EFFECT_STICKER.STICKER_NONE.rawValue
         }
     }
-
 }

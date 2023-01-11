@@ -11,11 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OpenCVWrapper : NSObject
+@interface LiveEffectHelper : NSObject
 
-- (nullable CVPixelBufferRef) convertFrame2CVPixelBuffer: (AgoraVideoFrame *) frame;
+- (nullable CVPixelBufferRef) convertVideoFrame2PixelBuffer: (AgoraVideoFrame *) frame;
 
-- (void) myAssign: (CVPixelBufferRef) pixelBuffer to: (AgoraVideoFrame *) frame;
+- (void) convertPixelBuffer2VideoFrame: (CVPixelBufferRef) pixelBuffer to: (AgoraVideoFrame *) frame;
 
 @end
 

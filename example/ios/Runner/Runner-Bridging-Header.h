@@ -1,3 +1,3 @@
 #import "GeneratedPluginRegistrant.h"
-#import "OpenCVWrapper.h"
+#import "LiveEffectHelper.h"
 #import "EffectWrapper.h"

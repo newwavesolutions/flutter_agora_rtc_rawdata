@@ -5,13 +5,13 @@
 //  Created by Lê Thọ Sơn on 23/12/2022.
 //
 
-#import "OpenCVWrapper.h"
+#import "LiveEffectHelper.h"
 #import <UIKit/UIKit.h>
 #import <agora_rtc_rawdata/agora_rtc_rawdata.h>
 
-@implementation OpenCVWrapper
+@implementation LiveEffectHelper
 
--  (nullable CVPixelBufferRef) convertFrame2CVPixelBuffer: (AgoraVideoFrame *) frame {
+-  (nullable CVPixelBufferRef) convertVideoFrame2PixelBuffer: (AgoraVideoFrame *) frame {
     int width = frame.width;
     int height = frame.height;
     unsigned char *yData = frame.yBuffer;
@@ -51,7 +51,7 @@
     return pixelBuffer;
 }
 
-- (void)myAssign: (CVPixelBufferRef)pixelBuffer to:(AgoraVideoFrame *)frame {
+- (void)convertPixelBuffer2VideoFrame: (CVPixelBufferRef)pixelBuffer to:(AgoraVideoFrame *)frame {
     unsigned char *yData = frame.yBuffer;
     unsigned char *uData = frame.uBuffer;
     unsigned char *vData = frame.vBuffer;
@@ -74,46 +74,4 @@
     
     CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
-
-//- (CVPixelBufferRef)convert2PlaneTo3:(CVPixelBufferRef) oldData {
-//    CVPixelBufferLockBaseAddress(oldData, 0);
-//    unsigned char *ySrcPlane = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(oldData, 0);
-//    unsigned char *uvDestPlane = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(oldData, 1);
-//
-//    unsigned long yPlaneWidth = CVPixelBufferGetWidthOfPlane(oldData, 0);
-//    unsigned long yPlaneHeight = CVPixelBufferGetHeightOfPlane(oldData, 0);
-//
-//    unsigned char *uData = (unsigned char *)calloc(yPlaneWidth * yPlaneHeight / 4, sizeof(unsigned char));
-//    unsigned char *vData = (unsigned char *)calloc(yPlaneWidth * yPlaneHeight / 4, sizeof(unsigned char));
-//
-//    for (int i = 0; i < yPlaneWidth * yPlaneHeight / 2; i ++) {
-//        if(i % 2 == 0) {
-//            uData[i / 2] = uvDestPlane[i];
-//        } else {
-//            vData[(i - 1) / 2] = uvDestPlane[i];
-//        }
-//    }
-//
-//
-//    NSDictionary *pixelAttributes = @{(NSString *)kCVPixelBufferIOSurfacePropertiesKey:@{}};
-//    CVPixelBufferRef pixelBuffer = NULL;
-//    CVReturn result = CVPixelBufferCreate(kCFAllocatorDefault,
-//                                          yPlaneWidth,
-//                                          yPlaneHeight,
-//                                          kCVPixelFormatType_420YpCbCr8PlanarFullRange,   //  NV12
-//                                            (__bridge CFDictionaryRef)(pixelAttributes),
-//                                            &pixelBuffer);
-//
-//
-//    unsigned char *yDestPlane = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0);
-//    unsigned char *uDestPlane = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1);
-//    unsigned char *vDestPlane = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 2);
-//
-//    memcpy(yDestPlane, ySrcPlane, yPlaneWidth * yPlaneHeight);
-//    memcpy(uDestPlane, uData, yPlaneWidth * yPlaneHeight / 4);
-//    memcpy(vDestPlane, vData, yPlaneWidth * yPlaneHeight / 4);
-//    CVPixelBufferUnlockBaseAddress(oldData, 0);
-//    return pixelBuffer;
-//}
-
 @end

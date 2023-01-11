@@ -41,6 +41,14 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
                 videoObserver = nil
             }
             result(nil)
+        case "setBeautyEffect":
+            guard let args = call.arguments as? [String : Any] else {return}
+            let value = args["value"] as? Double
+            let type = args["beauty_type"] as? Int
+            if let value = value, let type = type {
+                AgoraRawDataProcessor.shared.didChangeBeauty(type: type, value: value)
+            }
+            result(nil)
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -63,19 +71,10 @@ public class SwiftAgoraRtcRawdataPlugin: NSObject, FlutterPlugin, AgoraAudioFram
     }
 
     public func onCapture(_ videoFrame: AgoraVideoFrame) -> Bool {
-//         memset(videoFrame.uBuffer, 0, Int(videoFrame.uStride * videoFrame.height) / 2)
-//         memset(videoFrame.vBuffer, 0, Int(videoFrame.vStride * videoFrame.height) / 2)
-//         return true
-
         return AgoraRawDataProcessor.shared.processRawData(videoFrame)
     }
 
     public func onRenderVideoFrame(_ videoFrame: AgoraVideoFrame, uid _: UInt) -> Bool {
-
-//        memset(videoFrame.uBuffer, 255, Int(videoFrame.uStride * videoFrame.height) / 2)
-//        memset(videoFrame.vBuffer, 255, Int(videoFrame.vStride * videoFrame.height) / 2)
-
-//         return AgoraRawDataProcessor.shared.processRawData(videoFrame)
         return false
     }
 }
