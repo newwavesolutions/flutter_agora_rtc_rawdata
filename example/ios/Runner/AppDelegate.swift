@@ -20,7 +20,7 @@ import VideoToolbox
         GeneratedPluginRegistrant.register(with: self)
         
         //Init Firebase
-        FirebaseApp.configure()
+//        FirebaseApp.configure()
         
         //Init filter wrapper
         effectWrapper = EffectWrapper.init()

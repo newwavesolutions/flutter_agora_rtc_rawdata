@@ -211,7 +211,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
         if (self.config.detectorType == FACE_DETECTOR_OPENCV_CASCADE) {
             detector.detectFaces(imgOriginGray, faces);
         } else {
-            NSArray<FIRVisionFace *> *_faces;
+            NSArray<MLKFace *> *_faces;
             double scale = 1;
             if (self.config.facesDetectionByBuffer && sampleBuffer != nil) {
                 _faces = [fbDetector detectFacesWith:sampleBuffer rotation:rotation];
@@ -220,7 +220,7 @@ std::vector<int> beautyOrder = {BEAUTY_LIGHTEN, BEAUTY_ROSY, BEAUTY_SOFTEN, BEAU
             }
             scale = self.config.faceScale;
             if (_faces != nil) {
-                for (FIRVisionFace *face in _faces) {
+                for (MLKFace *face in _faces) {
                     CGRect frame = face.frame;
                     cv::Rect rect(frame.origin.x/scale, frame.origin.y/scale, frame.size.width/scale, frame.size.height/scale);
                     faces.push_back(rect);

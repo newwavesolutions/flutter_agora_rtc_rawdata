@@ -31,8 +31,7 @@ target 'Runner' do
 #   use_frameworks!
   use_modular_headers!
 
-#   pod 'Firebase/MLVision', '~> 6.10'
-#   pod 'Firebase/MLVisionFaceModel'
+  pod 'GoogleMLKit/FaceDetection'
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
