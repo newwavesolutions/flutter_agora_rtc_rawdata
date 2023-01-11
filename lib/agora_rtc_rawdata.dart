@@ -34,10 +34,11 @@ class AgoraRtcRawdata {
 }
 
 enum BeautyEffect {
-  BigEye(1),
-  Lighten(2),
-  Rosy(3),
-  Scrub(4),
+  None(0),
+  Scrub(1),
+  BigEye(2),
+  Lighten(3),
+  Rosy(4),
   Soften(5),
   VFace(6);
 
